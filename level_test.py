@@ -15,7 +15,8 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 import os
 from models import *
 import uuid
-
+from .frontend import frontend
+from .nav import nav
 
 
 application = Flask(__name__)
@@ -28,8 +29,6 @@ application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 Bootstrap(application)
-
-
 
 
 nav = Nav()

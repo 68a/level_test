@@ -28,15 +28,15 @@ application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap(application)
 
 
-nav.init_app(application)
-@nav.navigation()
-def mynavbar():
-    return Navbar(
-        'BD7MMF',
-        View('主页', 'home'), 
-        View('模拟考试', 'testing'),
-        View('请先登录', 'login'),
-    )
+#nav.init_app(application)
+#@nav.navigation()
+# def mynavbar():
+#     return Navbar(
+#         'BD7MMF',
+#         View('主页', 'home'), 
+#         View('模拟考试', 'testing'),
+#         View('请先登录', 'login'),
+#     )
 
         
 @application.route('/', methods=['GET', 'POST'])

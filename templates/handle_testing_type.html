@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{# Loads some of the macros included with Flask-Bootstrap. We are using the
+   utils module here to automatically render Flask's flashed messages in a
+   bootstrap friendly manner #}
+{% import "bootstrap/utils.html" as utils %}
+
+
+{# Inside the ``content`` is where you should place most of your own stuff.
+   This will keep scripts at the page end and a navbar you add on later
+   intact. #}
+{% block content %}
+  <div class="container">
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+  {%- if messages %}
+    <div class="row">
+      <div class="col-md-12">
+        {{utils.flashed_messages(messages)}}
+      </div>
+    </div>
+  {%- endif %}
+  {%- endwith %}
+    <div class="jumbotron col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      {% if session['logged_in'] %}
+   
+	{% if data %}
+	<h3>{{data}}</h3>
+	{% else %}
+
+	{% endif %}
+	<form class="form-horizontal" action="{{ url_for('show_seq_test') }}" method="post" name="quizTypeForm">
+	  <div class="row">
+            请选择第几题开始：
+	  </div>
+	    <div class="row">&nbsp;</div> 
+	  <div class="row">
+	    <div class="form-check">
+	      <label class="form-check-label">
+		<input class="form-control" type="text" name="testing_begin_sn" id="testing_begin_sn" value="1">
+	     
+	      </label>
+	    </div>
+	  </div>
+	  <div class="row">&nbsp;</div>
+	  <div class="row">
+            请选择测试多少道题：
+	  </div>
+	    <div class="row">&nbsp;</div> 
+	  <div class="row">
+	    <div class="form-check">
+	      <label class="form-check-label">
+		<input class="form-control" type="text" name="testing_question_count" id="testing_question_count" value="50">
+	     
+	      </label>
+	    </div>
+	  </div>
+
+	  <div class="row">&nbsp;</div>
+	  
+	    <div class="input-group">
+	      <div class="row">
+		<button type="submit" class="btn btn-primary">确定</button>
+	    </div>
+	  </div>
+	  </form>
+	{% else %}
+      <p>Please login!</p>
+
+      <a class="btn btn-lg btn-default " role="button" href="/login">Login</a> 
+      <a class="btn btn-lg btn-default " role="button" href="/register">Register</a>
+
+      {% endif %}
+
+    </div>
+  </div>
+
+
+
+{% endblock %}

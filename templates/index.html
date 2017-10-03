@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{# Loads some of the macros included with Flask-Bootstrap. We are using the
+   utils module here to automatically render Flask's flashed messages in a
+   bootstrap friendly manner #}
+{% import "bootstrap/utils.html" as utils %}
+{# Inside the ``content`` is where you should place most of your own stuff.
+   This will keep scripts at the page end and a navbar you add on later
+   intact. #}
+{% block content %}
+<div class="jumbotron"  > 
+  <div class="container" style="background-color=#000;">
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+  {%- if messages %}
+    <div class="row">
+      <div class="col-md-12">
+        {{utils.flashed_messages(messages)}}
+      </div>
+    </div>
+  {%- endif %}
+  {%- endwith %}
+      <h3>业余无线电操作证书考试辅导</h3>
+
+      {% if session['logged_in'] %}
+   
+	{% if data %}
+	<h3>{{data}}</h3>
+	{% else %}
+
+	<a href="/logout">Logout</a> <br> <br>
+	{% endif %}
+
+	{% else %}
+      <p>Please login!</p>
+
+      <a class="btn btn-lg btn-default " role="button" href="/login">Login</a> 
+      <a class="btn btn-lg btn-default " role="button" href="/register">Register</a>
+
+      {% endif %}
+
+    </div>
+  </div>
+
+
+
+{% endblock %}

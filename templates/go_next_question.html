@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{# Loads some of the macros included with Flask-Bootstrap. We are using the
+   utils module here to automatically render Flask's flashed messages in a
+   bootstrap friendly manner #}
+{% import "bootstrap/utils.html" as utils %}
+
+
+{# Inside the ``content`` is where you should place most of your own stuff.
+   This will keep scripts at the page end and a navbar you add on later
+   intact. #}
+{% block content %}
+  <div class="container">
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+  {%- if messages %}
+    <div class="row">
+      <div class="col-md-12">
+        {{utils.flashed_messages(messages)}}
+      </div>
+    </div>
+  {%- endif %}
+  {%- endwith %}
+    <div class="jumbotron col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      {% if session['logged_in'] %}
+   
+	{% if data %}
+	<h3>{{data}}</h3>
+	{% else %}
+
+	{% endif %}
+	<form class="form-horizontal" action="{{ url_for('go_next_question') }}" method="post" name="quizTypeForm">
+	  <div class="row">&nbsp;</div>
+	  <div class="row">{{paper_question_sn}} ) {{ question_sn }} &nbsp; &nbsp; {{ question_text }}</div>
+	  <div class="row">&nbsp;</div>
+	  <div class="form-check">
+	    <div class="row">
+	      <label class="form-check-label">
+		<input class="form-check-input" type="radio" name="option1" id="option1" value="a" >
+	        &nbsp; A. {{ question_a }}		
+	      </label>
+	    </div>
+	  </div>
+	  <div class="form-check">
+	    <div class="row">
+	      <label class="form-check-label">
+		<input class="form-check-input" type="radio" name="option1" id="option1" value="b" >
+		&nbsp; B. {{ question_b }}		
+	      </label>
+	    </div>
+	  </div>
+	  <div class="form-check">
+	    <div class="row">
+	      <label class="form-check-label">
+		<input class="form-check-input" type="radio" name="option1" id="option1" value="c" >
+		&nbsp; C. {{ question_c }}		
+	      </label>
+	    </div>
+	  </div>
+	  <div class="form-check">
+	    <div class="row">
+	      <label class="form-check-label">
+		<input class="form-check-input" type="radio" name="option1" id="option1" value="d" >
+		&nbsp; D. {{ question_d }}		
+	      </label>
+	    </div>
+	  </div>
+	  <div class="row">&nbsp;</div>
+	  <div class="row">{{ right_option }}</div>
+	  <div class="row">&nbsp;</div>
+	  
+	    <div class="input-group">
+	      <div class="row">
+		
+		<button type="submit" name="submit" value="next" class="btn btn-primary">下一题</button>
+		<button type="submit" name="submit" value="confirm" class="btn btn-primary">交卷退出</button>
+	    </div>
+	  </div>
+	  </form>
+	{% else %}
+      <p>Please login!</p>
+
+      <a class="btn btn-lg btn-default " role="button" href="/login">Login</a> 
+      <a class="btn btn-lg btn-default " role="button" href="/register">Register</a>
+
+      {% endif %}
+
+    </div>
+  </div>
+
+
+
+{% endblock %}

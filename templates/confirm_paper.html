@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{# Loads some of the macros included with Flask-Bootstrap. We are using the
+   utils module here to automatically render Flask's flashed messages in a
+   bootstrap friendly manner #}
+{% import "bootstrap/utils.html" as utils %}
+
+
+{# Inside the ``content`` is where you should place most of your own stuff.
+   This will keep scripts at the page end and a navbar you add on later
+   intact. #}
+{% block content %}
+  <div class="container">
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+  {%- if messages %}
+    <div class="row">
+      <div class="col-md-12">
+        {{utils.flashed_messages(messages)}}
+      </div>
+    </div>
+  {%- endif %}
+  {%- endwith %}
+    <div class="jumbotron col-md-12 col-md-offset-0 col-sm-8 col-sm-offset-2">
+      <div class="row">共有{{total_questions}}道题，已回答{{answered_questions}}道题，回答正确{{correct_answers}}道题，回答错误{{wrong_answers}}道题，正确率 {{correct_rate}} %</div>
+      <div class="row>&nbsp;</div>
+      {% if session['logged_in'] %}
+   
+	{% if data %}
+	<h3>{{data}}</h3>
+	{% else %}
+
+	{% endif %}
+	<div class="row">
+
+	  <table class="table table-striped" id="owned_stock_table">
+	    <thead>
+              <tr>
+		<th>编号</th>
+		<th>题目</th>
+		<th>选项A</th>
+		<th>选项B</th>
+		<th>选项C</th>
+		<th>选项D</th>
+		<th>回答</th>
+		<th>正确答案</th>
+              </tr>
+	    </thead>
+	    <tbody>
+              {% for question in paper %}
+              <tr>
+		<td>{{ question.question_sn }}</td>
+		<td>{{ question.question_text }}</td>
+		<td>{{ question.question_a }}</td>
+		<td>{{ question.question_b }}</td>
+		<td>{{ question.question_c }}</td>
+		<td>{{ question.question_d }}</td>
+		<td>{{ question.answer }}</td>
+		<td>{{ question.right_option }}</td>
+              </tr>
+              {% endfor %}
+	    </tbody>
+	  </table>
+	</div>
+	{% else %}
+      <p>Please login!</p>
+
+      <a class="btn btn-lg btn-default " role="button" href="/login">Login</a> 
+      <a class="btn btn-lg btn-default " role="button" href="/register">Register</a>
+
+      {% endif %}
+
+    </div>
+  </div>
+
+
+
+{% endblock %}

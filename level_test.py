@@ -38,7 +38,7 @@ def mynavbar():
         'BD7MMF',
         View('主页', 'home'), 
         View('模拟考试', 'testing'),
-        View('登录', 'login'),
+        View('请先登录', 'login'),
     )
 
         

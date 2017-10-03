@@ -26,8 +26,6 @@ application = Flask(__name__)
 application.config.from_object(os.environ['APP_SETTINGS'])
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
-
 Bootstrap(application)
 
 

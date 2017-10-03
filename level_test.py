@@ -15,8 +15,8 @@ from flask_login import LoginManager, login_user, logout_user, current_user, log
 import os
 from models import *
 import uuid
-from .frontend import frontend
-from .nav import nav
+from frontend import frontend
+from nav import nav
 
 
 application = Flask(__name__)

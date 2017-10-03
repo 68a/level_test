@@ -13,6 +13,7 @@ from markupsafe import escape
 from forms import SignupForm
 from nav import nav
 
+
 frontend = Blueprint('frontend', __name__)
 
 # We're adding a navbar as well through flask-navbar. In our example, the

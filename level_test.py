@@ -31,8 +31,6 @@ application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap(application)
 
 
-nav = Nav()
-
 nav.init_app(application)
 @nav.navigation()
 def mynavbar():

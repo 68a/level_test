@@ -41,9 +41,9 @@ nav.register_element('frontend_top', Navbar(
 
 # Our index-page just shows a quick explanation. Check out the template
 # "templates/index.html" documentation for more details.
-@frontend.route('/')
-def index():
-    return render_template('index.html')
+# @frontend.route('/')
+# def index():
+#     return render_template('index.html')
 
 
 # Shows a long signup form, demonstrating form rendering.

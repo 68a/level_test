@@ -16,7 +16,7 @@ import os
 from models import *
 import uuid
 from frontend import frontend
-from .nav import nav
+
 
 application = Flask(__name__)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'

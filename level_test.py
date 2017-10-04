@@ -33,8 +33,10 @@ nav.init_app(application)
 def mynavbar():
     return Navbar(
         'BD7MMF',
-        View('主页', 'home'), 
+        View('主页', 'home'),
+        View('考试题库', 'testing'),
         View('模拟考试', 'testing'),
+        View('杂七杂八', 'login'),
         View('请先登录', 'login'),
     )
 

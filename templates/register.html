@@ -3,12 +3,43 @@
 {% if session['logged_in'] %}
 <p>Oh no Dont show page</p>
 {% else %}
-
-<h2>Register</h2>
-<form action="/register/" method="POST">
-  <input type="username" name="username" placeholder="Username">
-  <input type="password" name="password" placeholder="Password">
-  <input type="submit" value="Log in">
-</form>
+{% with messages = get_flashed_messages(with_categories=true) %}
+<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <!-- <strong>Title</strong> --> {{ message }}
+</div>
+{% endfor %}
 {% endif %}
-{% endblock %}
+{% endwith %}
+<div class="container">
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-4">
+	
+	{% from "_formhelpers.html" import render_field %}
+	<form method=post>
+	  <div id="legend">
+	    <legend class="">帐号注册</legend>
+	  </div>
+	  <fieldset>
+	    {{render_field(form.username, class="form-control")}}
+	    <div>&nbsp;
+	    </div>
+	    {{render_field(form.password, class="form-control") }}
+	    <div>&nbsp;
+	    </div>
+	    {{render_field(form.confirm, class="form-control") }}
+	    <div>&nbsp;
+	    <p><input class="btn btn-success" type=submit value=注册>
+	  </fieldset>
+	</form>
+	
+      </div> 
+    </div>
+  </div>
+  
+  {% endif %}
+  {% endblock %}

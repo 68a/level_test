@@ -8,7 +8,7 @@
    This will keep scripts at the page end and a navbar you add on later
    intact. #}
 {% block content %}
-<div class="jumbotron"  > 
+
   <div class="container" style="background-color=#000;">
   {%- with messages = get_flashed_messages(with_categories=True) %}
   {%- if messages %}
@@ -18,28 +18,53 @@
       </div>
     </div>
   {%- endif %}
-  {%- endwith %}
-      <h3>业余无线电操作证书考试辅导</h3>
+    {%- endwith %}
 
-      {% if session['logged_in'] %}
-   
+    <div class="row">
+      <div class="col-md-8">
+	<h3>业余无线电操作证书模拟考试系统</h3>
+
+	<div class="row">&nbsp;</div> 
+  <p>本站模拟考试系统由BD7MMF依据中国无线电协会业余无线电分会<a href="http://www.crac.org.cn/?page_id=1862">业余无线电台操作证书考试题库电子版（v170926） </a>
+    利用业余时间开发，供业余无线电爱好者学习参考使用</p>
+  <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+      
+  {% if session['logged_in'] %}
+  
+  
+  <div class="row">&nbsp;</div> 
+        <h4>欢迎，{{user_name}}</h4>
+	<p>
+
+	  <button class="btn btn-primary" type="button" onclick="window.location.href='{{ url_for( 'testing') }}';"> 进入模拟考试</button>
+	  </p>
 	{% if data %}
-	<h3>{{data}}</h3>
+	<h3>{{data}}</h3>n
 	{% else %}
-
-	<a href="/logout">Logout</a> <br> <br>
+	<div class="row">&nbsp;</div>
+	<p>
+	  
+	  <a href="/logout">退出登录</a> 
+	  </p>
 	{% endif %}
 
 	{% else %}
-      <p>Please login!</p>
+      <p>请先登录，没有帐号请注册</p>
 
-      <a class="btn btn-lg btn-default " role="button" href="/login">Login</a> 
-      <a class="btn btn-lg btn-default " role="button" href="/register">Register</a>
+
+
+      	    <a class="btn btn-primary" role="button" href="/login">登录</a>
+	       <span>&nbsp;&nbsp;</span>
+	      <a class="btn  btn-success" role="button" href="/register">注册</a>
+
 
       {% endif %}
+      </div>
+      </div>
 
     </div>
-  </div>
+
 
 
 

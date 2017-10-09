@@ -2,6 +2,12 @@
   <head>
     <title>BD7MMF</title>
   </head>
+<script type="text/javascript">
+        function loading(){
+            $("#loading").show();
+            $("#content").hide();       
+        }
+</script>
 
   {# ``base.html`` is the template all our other templates derive from. While
    Flask-Bootstrap ships with its own base, it is good form to create a custom
@@ -39,7 +45,8 @@
 {% block styles -%}
     {{super()}}  {# do not forget to call super or Bootstrap's own stylesheets
                     will disappear! #}
-    <link rel="stylesheet" type="text/css"
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css"
           href="{{url_for('static', filename='level_test.css')}}">    
 
   {% endblock %}
@@ -48,5 +55,6 @@
 {% block navbar %}
     {{nav.mynavbar.render()}}
   {% endblock %}
-</html>
 
+
+</html>

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from passlib.hash import sha256_crypt
 
 db = SQLAlchemy()
 
@@ -36,7 +37,35 @@ class User(BaseModel, db.Model):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = password
+        self.password = sha256_crypt.encrypt(password)
+
+    def auth(username, password):
+        print(username, password)
+        data = User.query.filter_by(username=username).first()
+
+        if data is not None:
+            print("data password: %s password: %s" % (data.password, password))
+            if sha256_crypt.verify(password, data.password):
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def checkUserExist(username):
+        data = User.query.filter_by(username=username).first()
+        if data is not None:
+            return True
+        else:
+            return False
+    
+class UserTestLog(BaseModel, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String)
+    test_type = db.Column(db.String)
+    level_type = db.Column(db.String)
+    test_time = db.Column(db.Datetime)
+        
 
 class Questions(BaseModel, db.Model):
         id = db.Column(db.Integer, primary_key=True)

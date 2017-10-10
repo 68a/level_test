@@ -64,7 +64,7 @@ class UserTestLog(BaseModel, db.Model):
     user_name = db.Column(db.String)
     test_type = db.Column(db.String)
     level_type = db.Column(db.String)
-    test_time = db.Column(db.Datetime)
+    
         
 
 class Questions(BaseModel, db.Model):

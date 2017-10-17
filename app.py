@@ -195,12 +195,17 @@ def go_next_question():
         else:
             option_choice = -1
     
-
+        
         paper = Papers.query.filter((Papers.paper_sn == paper_sn) & (Papers.paper_question_sn == paper_question_sn)).first()
+
         paper.option_choice = option_choice
+        
         db.session.commit()
 
         session['current_question_sn'] += 1
+        next_question_sn = session['current_question_sn']
+        getPaperQuestionByPaperSnQuestionSn(paper_sn, next_question_sn)
+        
         return redirect(url_for('go_next_question'))
     else:
 
@@ -319,9 +324,13 @@ def show_seq_test():
                            question_d = question_d,
     )
 
-def getPaperQuestionByPaperSnQuestionSn (paper_sn, question_sn):
+def getPaperQuestionByPaperSnQuestionSn (paper_sn, paper_question_sn):
     testing_level = session ['testing_level']
+    paper = Papers.query.filter((Papers.paper_sn == paper_sn) & (Papers.paper_question_sn == paper_question_sn)).first()
+    question_sn = paper.question_sn
+    testing_level = session['testing_level']
     sql = text("select option_a, option_b, option_c, option_d from questions where level_type = '%s' and question_sn = '%s'" % ( testing_level, question_sn))
+    print(sql)
     x = db.engine.execute(sql)
     d = []
     for r in x:
@@ -334,9 +343,7 @@ def getPaperQuestionByPaperSnQuestionSn (paper_sn, question_sn):
     question_options.append(d[0][3])
     question_options, right_option = shuffler_option (question_options)
 
-    paper = Papers()
-    paper.paper_sn = paper_sn
-    paper.question_sn = question_sn
+#    paper = Papers.query.filter((Papers.paper_sn == paper_sn) & (Papers.paper_question_sn
     paper.question_text = getQuestionTextBySn (paper.question_sn)
     paper.question_a = question_options [0]
     paper.question_b = question_options [1]
@@ -344,11 +351,10 @@ def getPaperQuestionByPaperSnQuestionSn (paper_sn, question_sn):
     paper.question_d = question_options [3]
     paper.question_right_option = right_option
     paper.paper_question_sn = paper_question_sn
-    paper_question_sn += 1
-    paper.user_name = username
-    db.session.add(paper)
-    db.session.commit ()
 
+    db.session.commit ()
+    return paper.questions_text, paper.question_a, paper.question_b, paper.question_c, paper.question_d
+          
     
 
 @app.route("/handle_random_test", methods=['GET', 'POST'])
@@ -369,16 +375,12 @@ def handle_random_test():
             Papers.query.filter(Papers.user_name == username).delete()
             db.session.commit()
 
-            sn =  createPaperRandom(username, testing_level, question_count)
-            session['paper_sn'] = sn
-            query = Papers.query.filter(Papers.paper_sn == sn).first()
-            question_sn = query.question_sn
-            question_text = query.question_text
-            question_a = query.question_a
-            question_b = query.question_b
-            question_c = query.question_c
-            question_d = query.question_d
-            right_option = int(query.question_right_option) + 1
+            paper_sn =  createPaperRandom(username, testing_level, question_count)
+            session['paper_sn'] = paper_sn
+#            query = Papers.query.filter(Papers.paper_sn == sn).first()
+#            question_sn = query.question_sn
+            question_text, question_a, question_b, question_c, question_d = getPaperQuestionByPaperSnQuestionSn(paper_sn, 0)
+ 
             return render_template('go_next_question.html',
                            paper_question_sn = 1,
                            question_sn = question_sn,
@@ -445,12 +447,20 @@ def createPaperRandom(username, testing_level, question_count):
     shuffle(data)
     print("--- %s seconds ---  " % (time.time() - start_time))
 
+    i = 0
     for row in data[0:question_count]:
         question_sn = row [0]
+        if i == 0:
+            first_question_sn = row[0]
+
         paper = Papers()
         paper.paper_sn = paper_sn
         paper.user_name = username
+        paper.paper_question_sn = i
+        paper.question_sn = question_sn
         db.session.add(paper)
+        i += 1
+                
     print("--- %s seconds ---  " % (time.time() - start_time))
 
 

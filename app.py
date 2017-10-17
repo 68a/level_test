@@ -319,6 +319,37 @@ def show_seq_test():
                            question_d = question_d,
     )
 
+def getPaperQuestionByPaperSnQuestionSn (paper_sn, question_sn):
+    testing_level = session ['testing_level']
+    sql = text("select option_a, option_b, option_c, option_d from questions where level_type = '%s' and question_sn = '%s'" % ( testing_level, question_sn))
+    x = db.engine.execute(sql)
+    d = []
+    for r in x:
+        d.append(r)
+
+    question_options = []
+    question_options.append(d[0][0])
+    question_options.append(d[0][1])
+    question_options.append(d[0][2])
+    question_options.append(d[0][3])
+    question_options, right_option = shuffler_option (question_options)
+
+    paper = Papers()
+    paper.paper_sn = paper_sn
+    paper.question_sn = question_sn
+    paper.question_text = getQuestionTextBySn (paper.question_sn)
+    paper.question_a = question_options [0]
+    paper.question_b = question_options [1]
+    paper.question_c = question_options [2]
+    paper.question_d = question_options [3]
+    paper.question_right_option = right_option
+    paper.paper_question_sn = paper_question_sn
+    paper_question_sn += 1
+    paper.user_name = username
+    db.session.add(paper)
+    db.session.commit ()
+
+    
 
 @app.route("/handle_random_test", methods=['GET', 'POST'])
 def handle_random_test():
@@ -398,46 +429,63 @@ def getSnStr(sn):
     return sn_str
 
 def createPaperRandom(username, testing_level, question_count):
+    import time
     paper_sn = str (uuid.uuid1 ())
     paper_question_sn = 0
     
+    start_time = time.time()    
     sql = text("select question_sn from questions where level_type = '%s'" % testing_level)
     result = db.engine.execute(sql)
+    print("--- %s seconds ---  " % (time.time() - start_time))
     data = []
     for row in result:
         print(row)
         data.append(row)
+    print("--- %s seconds ---  " % (time.time() - start_time))
     shuffle(data)
+    print("--- %s seconds ---  " % (time.time() - start_time))
 
     for row in data[0:question_count]:
-        question_sn = row[0]   
-        sql = text("select option_a, option_b, option_c, option_d from questions where level_type = '%s' and question_sn = '%s'" % ( testing_level, question_sn))
-        x = db.engine.execute(sql)
-        d = []
-        for r in x:
-            d.append(r)
-        
-        question_options = []
-        question_options.append(d[0][0])
-        question_options.append(d[0][1])
-        question_options.append(d[0][2])
-        question_options.append(d[0][3])
-        question_options, right_option = shuffler_option (question_options)
+        question_sn = row [0]
         paper = Papers()
         paper.paper_sn = paper_sn
-        paper.question_sn = question_sn
-        paper.question_text = getQuestionTextBySn (paper.question_sn)
-        paper.question_a = question_options [0]
-        paper.question_b = question_options [1]
-        paper.question_c = question_options [2]
-        paper.question_d = question_options [3]
-        paper.question_right_option = right_option
-        paper.paper_question_sn = paper_question_sn
-        paper_question_sn += 1
         paper.user_name = username
         db.session.add(paper)
+    print("--- %s seconds ---  " % (time.time() - start_time))
+
+
+    # for row in data[0:question_count]:
+    #     question_sn = row[0]   
+    #     sql = text("select option_a, option_b, option_c, option_d from questions where level_type = '%s' and question_sn = '%s'" % ( testing_level, question_sn))
+    #     x = db.engine.execute(sql)
+    #     d = []
+    #     for r in x:
+    #         d.append(r)
+            
+    #     print("get option --- %s seconds ---  " % (time.time() - start_time))        
+    #     question_options = []
+    #     question_options.append(d[0][0])
+    #     question_options.append(d[0][1])
+    #     question_options.append(d[0][2])
+    #     question_options.append(d[0][3])
+    #     question_options, right_option = shuffler_option (question_options)
+    #     print("shuffle option --- %s seconds ---  " % (time.time() - start_time))        
+    #     paper = Papers()
+    #     paper.paper_sn = paper_sn
+    #     paper.question_sn = question_sn
+    #     paper.question_text = ''  #getQuestionTextBySn (paper.question_sn)
+    #     paper.question_a = question_options [0]
+    #     paper.question_b = question_options [1]
+    #     paper.question_c = question_options [2]
+    #     paper.question_d = question_options [3]
+    #     paper.question_right_option = right_option
+    #     paper.paper_question_sn = paper_question_sn
+    #     paper_question_sn += 1
+    #     paper.user_name = username
+    #     db.session.add(paper)
 
     db.session.commit()
+    print("---after commit %s seconds ---  " % (time.time() - start_time))
     return paper_sn
 
 

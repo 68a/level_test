@@ -10,6 +10,7 @@
    This will keep scripts at the page end and a navbar you add on later
    intact. #}
 {% block content %}
+<p id="demo"></p>
   <div class="container">
   {%- with messages = get_flashed_messages(with_categories=True) %}
   {%- if messages %}

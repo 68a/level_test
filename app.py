@@ -17,7 +17,7 @@ from models import *
 import uuid
 from wtforms.ext.i18n.form import Form
 from sqlalchemy import text
-
+import time
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -209,7 +209,7 @@ def go_next_question():
         return redirect(url_for('go_next_question'))
     else:
 
-        paper_sn = session['paper_sn']
+        paper_sn = session['paper_sn'] 
 
         paper_question_sn = session['current_question_sn']
         print("paper_sn=", paper_sn)
@@ -325,17 +325,23 @@ def show_seq_test():
     )
 
 def getPaperQuestionByPaperSnQuestionSn (paper_sn, paper_question_sn):
+    start_time = time.time()    
     testing_level = session ['testing_level']
     paper = Papers.query.filter((Papers.paper_sn == paper_sn) & (Papers.paper_question_sn == paper_question_sn)).first()
+    if paper == None:
+        return None
     question_sn = paper.question_sn
     testing_level = session['testing_level']
+    print("--- %s seconds ---  " % (time.time() - start_time))
     sql = text("select option_a, option_b, option_c, option_d from questions where level_type = '%s' and question_sn = '%s'" % ( testing_level, question_sn))
     print(sql)
     x = db.engine.execute(sql)
+    print("--- %s seconds ---  " % (time.time() - start_time))
     d = []
     for r in x:
         d.append(r)
 
+    print("--- %s seconds ---  " % (time.time() - start_time))
     question_options = []
     question_options.append(d[0][0])
     question_options.append(d[0][1])
@@ -344,16 +350,19 @@ def getPaperQuestionByPaperSnQuestionSn (paper_sn, paper_question_sn):
     question_options, right_option = shuffler_option (question_options)
 
 #    paper = Papers.query.filter((Papers.paper_sn == paper_sn) & (Papers.paper_question_sn
+    print("--- %s seconds ---  " % (time.time() - start_time))
     paper.question_text = getQuestionTextBySn (paper.question_sn)
+    print("--- %s seconds ---  " % (time.time() - start_time))
     paper.question_a = question_options [0]
     paper.question_b = question_options [1]
     paper.question_c = question_options [2]
     paper.question_d = question_options [3]
-    paper.question_right_option = right_option
+    paper.right_option = right_option
     paper.paper_question_sn = paper_question_sn
-
+    print( paper.question_text, paper.question_a, paper.question_b, paper.question_c, paper.question_d)
     db.session.commit ()
-    return paper.questions_text, paper.question_a, paper.question_b, paper.question_c, paper.question_d
+    print("---after commit %s seconds ---  " % (time.time() - start_time))
+    return question_sn, paper.question_text, paper.question_a, paper.question_b, paper.question_c, paper.question_d
           
     
 
@@ -379,7 +388,7 @@ def handle_random_test():
             session['paper_sn'] = paper_sn
 #            query = Papers.query.filter(Papers.paper_sn == sn).first()
 #            question_sn = query.question_sn
-            question_text, question_a, question_b, question_c, question_d = getPaperQuestionByPaperSnQuestionSn(paper_sn, 0)
+            question_sn, question_text, question_a, question_b, question_c, question_d = getPaperQuestionByPaperSnQuestionSn(paper_sn, 0)
  
             return render_template('go_next_question.html',
                            paper_question_sn = 1,
@@ -431,7 +440,7 @@ def getSnStr(sn):
     return sn_str
 
 def createPaperRandom(username, testing_level, question_count):
-    import time
+
     paper_sn = str (uuid.uuid1 ())
     paper_question_sn = 0
     

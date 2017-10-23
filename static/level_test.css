@@ -175,8 +175,9 @@
   background-color: #5cb85c; }
 
 div#loading {
-    width: 100px;
-    height: 100px;
+    position:relative;
+    width: 600px;
+    height: 200px;
     display: none;
     background: url(/static/loadingimage.gif) no-repeat;
     cursor: wait;

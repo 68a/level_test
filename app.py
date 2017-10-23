@@ -349,7 +349,6 @@ def getPaperQuestionByPaperSnQuestionSn (paper_sn, paper_question_sn):
     question_options.append(d[0][3])
     question_options, right_option = shuffler_option (question_options)
 
-#    paper = Papers.query.filter((Papers.paper_sn == paper_sn) & (Papers.paper_question_sn
     print("--- %s seconds ---  " % (time.time() - start_time))
     paper.question_text = getQuestionTextBySn (paper.question_sn)
     print("--- %s seconds ---  " % (time.time() - start_time))
@@ -357,9 +356,10 @@ def getPaperQuestionByPaperSnQuestionSn (paper_sn, paper_question_sn):
     paper.question_b = question_options [1]
     paper.question_c = question_options [2]
     paper.question_d = question_options [3]
-    paper.right_option = right_option
+    paper.question_right_option = right_option
     paper.paper_question_sn = paper_question_sn
     print( paper.question_text, paper.question_a, paper.question_b, paper.question_c, paper.question_d)
+    print ("paper.question_right_option=%s", right_option)
     db.session.commit ()
     print("---after commit %s seconds ---  " % (time.time() - start_time))
     return question_sn, paper.question_text, paper.question_a, paper.question_b, paper.question_c, paper.question_d
@@ -472,37 +472,6 @@ def createPaperRandom(username, testing_level, question_count):
                 
     print("--- %s seconds ---  " % (time.time() - start_time))
 
-
-    # for row in data[0:question_count]:
-    #     question_sn = row[0]   
-    #     sql = text("select option_a, option_b, option_c, option_d from questions where level_type = '%s' and question_sn = '%s'" % ( testing_level, question_sn))
-    #     x = db.engine.execute(sql)
-    #     d = []
-    #     for r in x:
-    #         d.append(r)
-            
-    #     print("get option --- %s seconds ---  " % (time.time() - start_time))        
-    #     question_options = []
-    #     question_options.append(d[0][0])
-    #     question_options.append(d[0][1])
-    #     question_options.append(d[0][2])
-    #     question_options.append(d[0][3])
-    #     question_options, right_option = shuffler_option (question_options)
-    #     print("shuffle option --- %s seconds ---  " % (time.time() - start_time))        
-    #     paper = Papers()
-    #     paper.paper_sn = paper_sn
-    #     paper.question_sn = question_sn
-    #     paper.question_text = ''  #getQuestionTextBySn (paper.question_sn)
-    #     paper.question_a = question_options [0]
-    #     paper.question_b = question_options [1]
-    #     paper.question_c = question_options [2]
-    #     paper.question_d = question_options [3]
-    #     paper.question_right_option = right_option
-    #     paper.paper_question_sn = paper_question_sn
-    #     paper_question_sn += 1
-    #     paper.user_name = username
-    #     db.session.add(paper)
-
     db.session.commit()
     print("---after commit %s seconds ---  " % (time.time() - start_time))
     return paper_sn
@@ -537,7 +506,7 @@ def createPaperSeq (username, begin_sn, question_count, testing_level):
         paper.paper_question_sn = paper_question_sn
         paper_question_sn = paper_question_sn + 1
         paper.user_name = username
-        
+
         db.session.add(paper)
     db.session.commit()
     return paper_sn

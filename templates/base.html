@@ -2,12 +2,23 @@
   <head>
     <title>BD7MMF</title>
   </head>
-<script type="text/javascript">
-        function loading(){
-            $("#loading").show();
-            $("#content").hide();       
+  <script type="text/javascript">
+    function loading(){
+
+    var startDateTime = new Date().getTime();
+    
+    setInterval(function(){
+       var now = new Date().getTime();
+       var distance = now - startDateTime; 
+       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            $("#loading_text").html("正在生成试卷..."+ seconds);
+    },1000);
+    
+        $("#loading").show();
+//        $("#loading_text").html("正在生成试卷..."+ seconds + "秒");
+        $("#content").hide();
         }
-</script>
+  </script>
 <script>
 // Set the date we're counting down to
 var countDownDate = new Date("Jan 5, 2018 15:37:25").getTime();

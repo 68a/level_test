@@ -18,6 +18,7 @@ import uuid
 from wtforms.ext.i18n.form import Form
 from sqlalchemy import text
 import time
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -208,7 +209,7 @@ def go_next_question():
         
         return redirect(url_for('go_next_question'))
     
-    else:  # the first question
+    else:  
 
         paper_sn = session['paper_sn'] 
 
@@ -223,6 +224,8 @@ def go_next_question():
         question_c = query.question_c
         question_d = query.question_d
 
+
+        
         return render_template('go_next_question.html',
                                paper_question_sn = paper_question_sn + 1, 
                                question_sn = question_sn,
@@ -301,6 +304,7 @@ def show_seq_test():
     begin_sn = int (request.form ['testing_begin_sn']) - 1
     question_count = int (request.form ['testing_question_count'])
     session['current_question_sn'] = 0
+    session['test_type'] = 'S'  # sequence 
     username = session['username']
     Papers.query.filter(Papers.user_name == username).delete()
     db.session.commit()
@@ -373,6 +377,7 @@ def handle_random_test():
     testing_level = session['testing_level']
     session['current_question_sn'] = 0
     username = session['username']
+    session['test_type'] = 'R'  #random 
 
     if not session.get('logged_in'):
         return render_template('index.html')
@@ -390,7 +395,9 @@ def handle_random_test():
 #            query = Papers.query.filter(Papers.paper_sn == sn).first()
 #            question_sn = query.question_sn
             question_sn, question_text, question_a, question_b, question_c, question_d = getPaperQuestionByPaperSnQuestionSn(paper_sn, 0)
- 
+            
+            logUserTest()
+            
             return render_template('go_next_question.html',
                            paper_question_sn = 1,
                            question_sn = question_sn,
@@ -401,6 +408,17 @@ def handle_random_test():
                            question_d = question_d,
                                    )
         return render_template('select_random_testing.html')
+
+def logUserTest():
+    testLog = UserTestLog()
+    testLog.user_name = session['username']
+    testLog.test_type = session['test_type']
+    testLog.level_type = session['testing_level']
+    testLog.test_start_time = datetime.now()
+
+    db.session.add(testLog)
+    db.session.commit()
+        
 
 #
 # in:

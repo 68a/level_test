@@ -207,7 +207,8 @@ def go_next_question():
         getPaperQuestionByPaperSnQuestionSn(paper_sn, next_question_sn)
         
         return redirect(url_for('go_next_question'))
-    else:
+    
+    else:  # the first question
 
         paper_sn = session['paper_sn'] 
 

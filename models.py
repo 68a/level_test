@@ -64,7 +64,9 @@ class UserTestLog(BaseModel, db.Model):
     user_name = db.Column(db.String)
     test_type = db.Column(db.String)
     level_type = db.Column(db.String)
-    
+    test_start_time = db.Column(db.DateTime)
+    test_stop_time = db.Column(db.DateTime)
+    result_point = db.Column (db.Float)
         
 
 class Questions(BaseModel, db.Model):
@@ -104,8 +106,10 @@ class Papers (BaseModel, db.Model):
 class PaperTestResult (BaseModel, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     level_type = db.Column(db.String)
-    user_id = db.Column (db.Integer)
+    user_name = db.Column (db.String)
     
-    paper_sn = db.Column (db.Integer)
+    paper_sn = db.Column (db.String)
     paper_point = db.Column (db.Integer)
+    start_time = db.Column (db.DateTime)
+    staop_time = db.Column (db.DateTime)
     

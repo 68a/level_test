@@ -172,6 +172,8 @@ def go_next_question():
     action_type = request.form.get('submit')
     paper_sn = session['paper_sn']
     paper_question_sn = session['current_question_sn']
+
+    test_start_time = session ['test_start_time']
     question_count = Papers.query.filter(Papers.paper_sn == paper_sn).count()
     if paper_question_sn >= question_count:
         return redirect(url_for('confirm_paper'))
@@ -377,7 +379,8 @@ def handle_random_test():
     testing_level = session['testing_level']
     session['current_question_sn'] = 0
     username = session['username']
-    session['test_type'] = 'R'  #random 
+    session['test_type'] = 'R'  #random
+
 
     if not session.get('logged_in'):
         return render_template('index.html')
@@ -395,9 +398,10 @@ def handle_random_test():
 #            query = Papers.query.filter(Papers.paper_sn == sn).first()
 #            question_sn = query.question_sn
             question_sn, question_text, question_a, question_b, question_c, question_d = getPaperQuestionByPaperSnQuestionSn(paper_sn, 0)
-            
+
             logUserTest()
-            
+            test_start_time = session ['test_start_time']
+            print (test_start_time)
             return render_template('go_next_question.html',
                            paper_question_sn = 1,
                            question_sn = question_sn,
@@ -406,6 +410,7 @@ def handle_random_test():
                            question_b = question_b,
                            question_c = question_c,
                            question_d = question_d,
+                           test_start_time = test_start_time
                                    )
         return render_template('select_random_testing.html')
 
@@ -415,7 +420,8 @@ def logUserTest():
     testLog.test_type = session['test_type']
     testLog.level_type = session['testing_level']
     testLog.test_start_time = datetime.now()
-
+    session ['test_start_time'] = testLog.test_start_time
+    
     db.session.add(testLog)
     db.session.commit()
         

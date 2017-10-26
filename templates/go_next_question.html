@@ -11,6 +11,7 @@
    intact. #}
 {% block content %}
 <p id="demo"></p>
+<p id="demo2"></p>
   <div class="container">
   {%- with messages = get_flashed_messages(with_categories=True) %}
   {%- if messages %}
@@ -29,6 +30,9 @@
 	{% else %}
 
 	{% endif %}
+        <div class="row" id="timer">
+         <p>--> {{test_start_time}}</p>
+        </div>
 	<form class="form-horizontal" action="{{ url_for('go_next_question') }}" method="post" name="quizTypeForm">
 	  <div class="row">&nbsp;</div>
 	  <div class="row">{{paper_question_sn}} ) {{ question_sn }} &nbsp; &nbsp; {{ question_text }}</div>
@@ -90,4 +94,42 @@
 
 
 
+
+<script type="text/javascript">
+// Set the date we're counting down to
+var countDownDate = new Date("Jan 5, 2018 15:37:25").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+    var startDateTime = new Date("{{test_start_time}}");
+    var now = new Date().getTime();
+    var distance = now - startDateTime;
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("timer").innerHTML = "考试用时: " + minutes + " 分 " + seconds + "  秒";
+
+// Get todays date and time
+    var now = new Date().getTime();
+    
+    // Find the distance between now an the count down date
+    var distance = countDownDate - now;
+    
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    // Output the result in an element with id="demo"
+    document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+    + minutes + "m " + seconds + "s ";
+    
+    // If the count down is over, write some text 
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("demo").innerHTML = "EXPIRED";
+    }
+                   }, 1000);
+</script>
 {% endblock %}

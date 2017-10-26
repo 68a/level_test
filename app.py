@@ -236,7 +236,7 @@ def go_next_question():
                                question_b = question_b,
                                question_c = question_c,
                                question_d = question_d,
-
+                               test_start_time = test_start_time
 
         )
 @app.route("/confirm_paper", methods=['GET', 'POST'])

@@ -125,6 +125,10 @@ def testing():
         if not session.get('logged_in'):
                 return render_template('index.html')
         else:
+            userTestLog = UserTestLog.filter (UserTestLog.user_name == session ['username'] ).order_by (UserTestLog.test_start_time.desc ()).first ()
+            if userTestLog is not None:
+                print ("level_type=", userTestLog.level_type)
+            
             return render_template('select_level.html')
 
 @app.route("/select_level", methods=['GET', 'POST'])
@@ -225,7 +229,8 @@ def go_next_question():
         question_b = query.question_b
         question_c = query.question_c
         question_d = query.question_d
-
+        level_type = session ['testing_level']
+        print ("level_type=", level_type)
 
         
         return render_template('go_next_question.html',
@@ -236,6 +241,8 @@ def go_next_question():
                                question_b = question_b,
                                question_c = question_c,
                                question_d = question_d,
+                               level_type = level_type,
+                               question_count = session ['question_count'],
                                test_start_time = test_start_time
 
         )
@@ -389,6 +396,7 @@ def handle_random_test():
         
         if question_count is not None:
             session['current_question_sn'] = 0
+            session['question_count'] = question_count
             username = session['username']
             Papers.query.filter(Papers.user_name == username).delete()
             db.session.commit()
@@ -410,8 +418,9 @@ def handle_random_test():
                            question_b = question_b,
                            question_c = question_c,
                            question_d = question_d,
-                           test_start_time = test_start_time
-                                   )
+                                   level_type = session ['testing_level'],
+                                   question_count = question_count,
+                           test_start_time = test_start_time)
         return render_template('select_random_testing.html')
 
 def logUserTest():

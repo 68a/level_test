@@ -10,8 +10,7 @@
    This will keep scripts at the page end and a navbar you add on later
    intact. #}
 {% block content %}
-<p id="demo"></p>
-<p id="demo2"></p>
+
   <div class="container">
   {%- with messages = get_flashed_messages(with_categories=True) %}
   {%- if messages %}
@@ -21,8 +20,13 @@
       </div>
     </div>
   {%- endif %}
-  {%- endwith %}
-    <div class="jumbotron col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    {%- endwith %}
+    <div class="row">
+      <p> <h2>业余无线电操作证书模拟考试 {{level_type}}类</h2></p>
+    </div>
+               
+    <div class="row" style="background-color:#f1f1f1 !important;"> 
+
       {% if session['logged_in'] %}
    
 	{% if data %}
@@ -30,59 +34,58 @@
 	{% else %}
 
 	{% endif %}
-        <div class="row" id="timer">
-         <p>--> {{test_start_time}}</p>
-        </div>
-	<form class="form-horizontal" action="{{ url_for('go_next_question') }}" method="post" name="quizTypeForm">
+	<form class="" action="{{ url_for('go_next_question') }}" method="post" name="quizTypeForm">
 	  <div class="row">&nbsp;</div>
-	  <div class="row">{{paper_question_sn}} ) {{ question_sn }} &nbsp; &nbsp; {{ question_text }}</div>
+	  <div class="" style="margin: 0px 15px !important;"><h4>{{paper_question_sn}}.&nbsp;{{ question_text }}</h3></div>
 	  <div class="row">&nbsp;</div>
-	  <div class="form-check">
-	    <div class="row">
-	      <label class="form-check-label">
+	  <div class="form-check" style="margin: 0px 20px !important;">
+             <label class="form-check-label">                
 		<input class="form-check-input" type="radio" name="option1" id="option1" value="a" >
 	        &nbsp; A. {{ question_a }}		
 	      </label>
-	    </div>
 	  </div>
-	  <div class="form-check">
-	    <div class="row">
-	      <label class="form-check-label">
+	  <div class="form-check" style="margin: 0px 20px !important;">
+             <label class="form-check-label">
 		<input class="form-check-input" type="radio" name="option1" id="option1" value="b" >
 		&nbsp; B. {{ question_b }}		
-	      </label>
-	    </div>
+
+              </label>
 	  </div>
-	  <div class="form-check">
-	    <div class="row">
-	      <label class="form-check-label">
-		<input class="form-check-input" type="radio" name="option1" id="option1" value="c" >
-		&nbsp; C. {{ question_c }}		
-	      </label>
-	    </div>
+	  <div class="form-check" style="margin: 0px 20px !important;">
+                <label class="form-check-label">
+		  <input class="form-check-input" type="radio" name="option1" id="option1" value="c" >
+		  &nbsp; C. {{ question_c }}		
+	        </label>
 	  </div>
-	  <div class="form-check">
-	    <div class="row">
+
+	  <div class="form-check" style="margin: 0px 20px !important;">
 	      <label class="form-check-label">
 		<input class="form-check-input" type="radio" name="option1" id="option1" value="d" >
-		&nbsp; D. {{ question_d }}		
-	      </label>
-	    </div>
+		&nbsp; D. {{ question_d }}
+              	      </label>
 	  </div>
+
 	  <div class="row">&nbsp;</div>
-	  <div class="row">{{ right_option }}</div>
+</div>
+
 	  <div class="row">&nbsp;</div>
-	  
-	    <div class="input-group">
 	      <div class="row">
-		
-		<button type="submit" name="submit" value="next" class="btn btn-primary">下一题</button>
-		<button type="submit" name="submit" value="confirm" class="btn btn-primary">交卷退出</button>
-	    </div>
-	  </div>
-	  </form>
+                <div class="col-md-4">
+		  <button type="submit" name="submit" value="next" class="btn btn-primary">下一题</button>
+                </div>
+                <div class="col-md-4" style="line-height:40px;heigh:40px">
+                  总题数：{{question_count}}
+                </div>
+
+                <div class="col-md-4" style="line-height:40px;heigh:40px">
+                     <span  id="timer">          {{test_start_time}} </span>
+                  </div>
+
+	      </div>
+       </form>
+
 	{% else %}
-      <p>Please login!</p>
+      <p>请先登录!</p>
 
       <a class="btn btn-lg btn-default " role="button" href="/login">Login</a> 
       <a class="btn btn-lg btn-default " role="button" href="/register">Register</a>
@@ -109,27 +112,6 @@ var x = setInterval(function() {
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
     document.getElementById("timer").innerHTML = "考试用时: " + minutes + " 分 " + seconds + "  秒";
 
-// Get todays date and time
-    var now = new Date().getTime();
-    
-    // Find the distance between now an the count down date
-    var distance = countDownDate - now;
-    
-    // Time calculations for days, hours, minutes and seconds
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-    // Output the result in an element with id="demo"
-    document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-    + minutes + "m " + seconds + "s ";
-    
-    // If the count down is over, write some text 
-    if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("demo").innerHTML = "EXPIRED";
-    }
                    }, 1000);
 </script>
 {% endblock %}
